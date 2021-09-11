@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TodoApp</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="background_icon">Background Icon</string>
+    <string name="title">Title</string>
+    <string name="save_reminder">Save Reminder</string>
+    <string name="remind_me">Remind Me</string>
+    <string name="today">Today</string>
+    <string name="and">\@</string>
+    <string name="time">Time</string>
+    <string name="reminder_set_for_date_time">Reminder set for Date, Time</string>
+</resources>
