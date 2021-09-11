@@ -36,17 +36,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-        SQLiteHelper db = new SQLiteHelper(mContext);
-        Cursor cursor = db.getAllData();
-        if (cursor != null && cursor.getCount() > 0){
-            while (cursor.moveToNext()){
-                holder.binding.TodoName.setText(cursor.getString(1));
-                holder.binding.TodoTime.setText(cursor.getString(2));
-                holder.binding.TodoDate.setText(cursor.getString(3));
-            }
-        }else {
-            Toast.makeText(mContext, "No Data retrieved.", Toast.LENGTH_SHORT).show();
-        }
+        holder.binding.TodoName.setText(mTodos.get(position).getTitle());
+        holder.binding.TodoTime.setText(mTodos.get(position).getTime());
+        holder.binding.TodoDate.setText(mTodos.get(position).getDate());
     }
 
     @Override

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     List<Todos> mTodos;
     TodoAdapter adapter;
+    SQLiteHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.ToolBar);
 
-        SQLiteHelper db = new SQLiteHelper(this);
-
-        mTodos = new ArrayList<>();
+        db = new SQLiteHelper(this);
+        mTodos = new ArrayList<>(db.getAllData());
         adapter = new TodoAdapter(MainActivity.this, mTodos);
-        Cursor cursor = db.getAllData();
-        if (cursor != null){
-            while (cursor.moveToNext()){
-                binding.imageView4.setVisibility(View.GONE);
-                binding.TodoList.setVisibility(View.VISIBLE);
-                binding.TodoList.setLayoutManager(new LinearLayoutManager(this));
-                binding.TodoList.setAdapter(adapter);
-            }
+        if (!db.getAllData().isEmpty()){
+            binding.TodoList.setVisibility(View.VISIBLE);
+            binding.TodoList.setAdapter(adapter);
+            binding.TodoList.setLayoutManager(new LinearLayoutManager(this));
+            binding.imageView4.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
         }else {
-            binding.imageView4.setVisibility(View.VISIBLE);
-            binding.TodoList.setVisibility(View.GONE);
             Toast.makeText(MainActivity.this, "No Data found.", Toast.LENGTH_SHORT).show();
+            binding.TodoList.setVisibility(View.GONE);
+            binding.imageView4.setVisibility(View.VISIBLE);
         }
     }
 
@@ -68,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.deleteList:
-                Toast.makeText(MainActivity.this, "Delete all Todos.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Deleted all Todos.", Toast.LENGTH_SHORT).show();
+                db.deleteAllData();
+                binding.TodoList.setVisibility(View.GONE);
+                binding.imageView4.setVisibility(View.VISIBLE);
+                binding.TodoList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 return true;
 
             case R.id.settings:

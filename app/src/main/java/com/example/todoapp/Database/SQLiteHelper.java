@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.todoapp.Models.Todos;
+
+import java.util.ArrayList;
+
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TodoList.db";
@@ -28,6 +32,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 
     public boolean insertData(String title, String time, String date){
@@ -47,9 +52,26 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getAllData(){
+    public ArrayList<Todos> getAllData(){
+        ArrayList<Todos> todoList = new ArrayList<>();
+
         SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        return cursor;
+        Cursor cursor = database.rawQuery("SELECT * FROM "+TABLE_NAME, null);
+        if (cursor != null){
+            while (cursor.moveToNext()){
+                Todos todos = new Todos();
+                todos.setTitle(cursor.getString(1));
+                todos.setTime(cursor.getString(2));
+                todos.setDate(cursor.getString(3));
+                todoList.add(todos);
+            }
+        }
+        return todoList;
+    }
+
+    public void deleteAllData(){
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL("DELETE FROM "+TABLE_NAME);
+        database.close();
     }
 }
